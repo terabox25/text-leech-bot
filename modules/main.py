@@ -292,19 +292,19 @@ async def account_login(bot: Client, m: Message):
                                 await m.reply_text(f"⌘ Downloading interrupted\n{str(e)}\n⌘ Name » {name}\n⌘ Link » `{url}`")
                             await prog.delete(True)
                 else:
-    Show = f"❊⟱ Downloading ⟱❊ »\n\n📝 Name » `{name}`\n⌨ Quality » {res}\n\n**🔗 URL »** `{url}`"
-    prog = await m.reply_text(Show)
-    cc = f'**[ 🎥 ] Vid_ID:** {str(i + 1).zfill(3)}. **{raw_text0}{MR}.mkv\n✉️ Batch » **{raw_text0}**'
-    try:
-        await helper.download_video(url, cmd, name)
-        filename = f'{name}.mp4'
-        await helper.send_vid(bot, m, cc, filename, thumb, name, prog)
-    except Exception as e:
-        await m.reply_text(f"⌘ Downloading interrupted\n{str(e)}\n⌘ Name » {name}\n⌘ Link » `{url}`")
-    await prog.delete(True)
+                     Show = f"❊⟱ Downloading ⟱❊ »\n\n📝 Name » `{name}`\n⌨ Quality » {res}\n\n**🔗 URL »** `{url}`"
+                     prog = await m.reply_text(Show)
+                     cc = f'**[ 🎥 ] Vid_ID:** {str(i + 1).zfill(3)}. **{raw_text0}{MR}.mkv\n✉️ Batch » **{raw_text0}**'
+                     try:
+                         await helper.download_video(url, cmd, name)
+                         filename = f'{name}.mp4'
+                         await helper.send_vid(bot, m, cc, filename, thumb, name, prog)
+                     except Exception as e:
+                         await m.reply_text(f"⌘ Downloading interrupted\n{str(e)}\n⌘ Name » {name}\n⌘ Link » `{url}`")
+                    await prog.delete(True)
     
     # Continue to the next link in the loop
-    continue
+                continue
 
 # After all the links are processed
 await m.reply_text("✅ 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲 𝐃𝐨𝐧𝐞")
