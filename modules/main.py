@@ -129,12 +129,8 @@ async def account_login(bot: Client, m: Message):
         else:
             await m.reply_text("Please send a valid link.")
     else:
-        await m.reply_text("Please send a direct link or a .txt file.")
-
-    # Delete the user's input message
-    await input_msg.delete(True)
-
-
+        await m.reply_text("Please send a direct link or a .txt file."
+        return  # Exit if the input is neither a file nor a valid link
 
     await editable.edit(f"∝ 𝐓𝐨𝐭𝐚𝐥 𝐋𝐢𝐧𝐤 𝐅𝐨𝐮𝐧𝐝 𝐀𝐫𝐞 🔗** **{len(links)}**\n\n𝐒𝐞𝐧𝐝 𝐅𝐫𝐨𝐦 𝐖𝐡𝐞𝐫𝐞 𝐘𝐨𝐮 𝐖𝐚𝐧𝐭 𝐓𝐨 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐈𝐧𝐢𝐭𝐚𝐥 𝐢𝐬 **1**")
     input0: Message = await bot.listen(editable.chat.id)
