@@ -91,28 +91,51 @@ async def restart_handler(_, m):
 
 @bot.on_message(filters.command(["upload"]))
 async def account_login(bot: Client, m: Message):
-    editable = await m.reply_text('𝐓𝐨 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐀 𝐓𝐱𝐭 𝐅𝐢𝐥𝐞 𝐒𝐞𝐧𝐝 𝐇𝐞𝐫𝐞 ⏍')
-    input: Message = await bot.listen(editable.chat.id)
-    x = await input.download()
-    await input.delete(True)
+    editable = await m.reply_text('Send a direct link or a .txt file containing links.')
 
-    path = f"./downloads/{m.chat.id}"
+    # Wait for user input
+    input_msg: Message = await bot.listen(editable.chat.id)
 
-    try:
-       with open(x, "r") as f:
-           content = f.read()
-       content = content.split("\n")
-       links = []
-       for i in content:
-           links.append(i.split("://", 1))
-       os.remove(x)
-            # print(len(links)
-    except:
-           await m.reply_text("∝ 𝐈𝐧𝐯𝐚𝐥𝐢𝐝 𝐟𝐢𝐥𝐞 𝐢𝐧𝐩𝐮𝐭.")
-           os.remove(x)
-           return
-    
-   
+    # Check if the input is a direct link or a file
+    if input_msg.document:
+        # If it's a .txt file, download and process it
+        if input_msg.document.file_name.endswith('.txt'):
+            file_path = await input_msg.download()
+
+            try:
+                with open(file_path, "r") as file:
+                    content = file.read().splitlines()
+
+                os.remove(file_path)  # Remove the file after reading it
+
+                links = []
+                for line in content:
+                    if line.startswith("http://") or line.startswith("https://"):
+                        links.append(line)
+                
+                # Now you can process the links list
+                await m.reply_text(f"Found {len(links)} links in the file.")
+                
+            except Exception as e:
+                await m.reply_text(f"Error processing file: {str(e)}")
+        else:
+            await m.reply_text("Please send a valid .txt file.")
+    elif input_msg.text:
+        # If it's a direct link, process it
+        direct_link = input_msg.text
+        if direct_link.startswith("http://") or direct_link.startswith("https://"):
+            await m.reply_text(f"Processing link: {direct_link}")
+            # Now you can process the direct link
+        else:
+            await m.reply_text("Please send a valid link.")
+    else:
+        await m.reply_text("Please send a direct link or a .txt file.")
+
+    # Delete the user's input message
+    await input_msg.delete(True)
+
+
+
     await editable.edit(f"∝ 𝐓𝐨𝐭𝐚𝐥 𝐋𝐢𝐧𝐤 𝐅𝐨𝐮𝐧𝐝 𝐀𝐫𝐞 🔗** **{len(links)}**\n\n𝐒𝐞𝐧𝐝 𝐅𝐫𝐨𝐦 𝐖𝐡𝐞𝐫𝐞 𝐘𝐨𝐮 𝐖𝐚𝐧𝐭 𝐓𝐨 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐈𝐧𝐢𝐭𝐚𝐥 𝐢𝐬 **1**")
     input0: Message = await bot.listen(editable.chat.id)
     raw_text = input0.text
