@@ -87,6 +87,58 @@ async def restart_handler(_, m):
     await m.reply_text("♦ 𝐒𝐭𝐨𝐩𝐩𝐞𝐭 ♦", True)
     os.execl(sys.executable, sys.executable, *sys.argv)
 
+@bot.on_message(filters.command(["upload"]))
+async def account_login(bot: Client, m: Message):
+    # Ask the user if they want to upload from a link or a .txt file
+    editable = await m.reply_text('Do you want to upload from a link or a .txt file?\n\nSend "link" for direct link upload or "file" for .txt file upload.')
+
+    # Listen for user input
+    user_choice: Message = await bot.listen(editable.chat.id)
+    choice = user_choice.text.lower()
+    await user_choice.delete(True)
+
+    # If user chooses to upload from a link
+    if choice == "link":
+        await editable.edit("Please send the direct download link.")
+        input_link: Message = await bot.listen(editable.chat.id)
+        link = input_link.text
+        await input_link.delete(True)
+
+        # Proceed with the download and upload process for the link
+        await editable.edit(f"Starting upload for the provided link: {link}")
+        # Your code to handle direct link upload (similar to the logic in your current code)
+        # For example:
+        # Replace this with your download and upload code for the direct link
+        # You can use the same download process as in the .txt file logic but with a single link
+
+    # If user chooses to upload from a .txt file
+    elif choice == "file":
+        await editable.edit('Please send the .txt file containing the download links.')
+        input: Message = await bot.listen(editable.chat.id)
+        x = await input.download()
+        await input.delete(True)
+
+        # Proceed with the existing .txt file upload logic
+        path = f"./downloads/{m.chat.id}"
+        try:
+            with open(x, "r") as f:
+                content = f.read()
+            content = content.split("\n")
+            links = []
+            for i in content:
+                links.append(i.split("://", 1))
+            os.remove(x)
+        except:
+            await m.reply_text("Invalid file input.")
+            os.remove(x)
+            return
+
+        await editable.edit(f"Total links found: {len(links)}\n\nSend the starting point (default is 1)")
+        # Continue with the rest of your existing logic...
+
+    else:
+        await editable.edit("Invalid input. Please use /upload command again and choose either 'link' or 'file'.")
+
 
 
 @bot.on_message(filters.command(["upload"]))
